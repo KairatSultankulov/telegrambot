@@ -5,7 +5,7 @@ from bot_config import dp
 from handlers import (
     start,
     myinfo,
-    random,
+    names,
     branches,
     delivery
 )
@@ -14,7 +14,7 @@ from handlers import (
 async def main():
     start.register_handlers(dp)
     myinfo.register_handlers(dp)
-    random.register_handlers(dp)
+    names.register_handlers(dp)
     branches.register_handlers(dp)
     delivery.register_handlers(dp)
     await dp.start_polling()
