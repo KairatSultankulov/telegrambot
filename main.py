@@ -7,12 +7,14 @@ from handlers import (
     myinfo,
     names,
     branches,
-    delivery
+    delivery,
+    rewiew_dialog
 )
 
 
 async def main():
     start.register_handlers(dp)
+    rewiew_dialog.register_handlers(dp)
     myinfo.register_handlers(dp)
     names.register_handlers(dp)
     branches.register_handlers(dp)
