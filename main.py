@@ -1,28 +1,31 @@
-import asyncio
 import logging
-
-from bot_config import dp, database
-from handlers import (
-    start,
-    myinfo,
-    names,
-    branches,
-    delivery,
-    review_dialog
-)
+from aiogram import executor
+from bot_config import dp, database, ADMINS, bot
+from handlers import start, myinfo, names, branches,delivery,review_dialog, store_fsm
 
 
-async def main():
-    start.register_handlers(dp)
-    review_dialog.register_handlers(dp)
-    myinfo.register_handlers(dp)
-    names.register_handlers(dp)
-    branches.register_handlers(dp)
-    delivery.register_handlers(dp)
-    database.create_tables()
-    await dp.start_polling()
+
+async def on_startup(_):
+    for admin in ADMINS:
+        await bot.send_message(chat_id=admin ,text='Бот включен!')
+
+
+async def on_shutdown(_):
+    for admin in ADMINS:
+        await bot.send_message(chat_id=admin ,text='Бот выключен!')
+
+start.register_handlers(dp)
+review_dialog.register_handlers(dp)
+myinfo.register_handlers(dp)
+names.register_handlers(dp)
+branches.register_handlers(dp)
+delivery.register_handlers(dp)
+database.create_tables()
+store_fsm.register_handlers(dp)
 
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    asyncio.run(main())
+    executor.start_polling(dp, skip_updates=True,
+                           on_startup=on_startup,
+                           on_shutdown=on_shutdown)
