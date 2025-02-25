@@ -2,7 +2,7 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
-
+from db import main_db
 
 
 class StoreFSM(StatesGroup):
@@ -14,6 +14,7 @@ class StoreFSM(StatesGroup):
     photo = State()
     submit = State()
     infoproduct = State()
+    collection = State()
 
 
 async def start_fsm_store(message: types.Message):
@@ -77,7 +78,27 @@ async def load_photo(message: types.Message, state: FSMContext):
 async def submit_load(message: types.Message, state: FSMContext):
     if message.text == 'да':
         async with state.proxy() as data:
+
+            await main_db.sql_insert_store(
+                name_product=data['name_product'],
+                price=data['price'],
+                size=data['size'],
+                product_id=data['product_id'],
+                photo=data['photo']
+            )
+
+            await main_db.sql_insert_store_details(
+                category=data['category'],
+                product_id=data['product_id']
+            )
+
+            await main_db.sql_insert_collection_products(
+                product_id=data['product_id'],
+                collection=data['collection']
+            )
+
             await message.answer('Ваши данные в базе!')
+
             await state.finish()
     elif message.text == 'нет':
         await message.answer('Хорошо, отменено!')
