@@ -1,7 +1,7 @@
 import logging
 from aiogram import executor
 from bot_config import dp, database, ADMINS, bot
-from handlers import start, myinfo, names, branches,delivery,review_dialog, store_fsm, send_products
+from handlers import start, myinfo, names, branches,delivery,review_dialog, store_fsm, send_products, edit_products
 from db.main_db import create_tables
 
 
@@ -26,6 +26,7 @@ database.create_tables()
 store_fsm.register_handlers(dp)
 
 send_products.register_handlers(dp)
+edit_products.register_handlers(dp)
 
 
 if __name__ == '__main__':
